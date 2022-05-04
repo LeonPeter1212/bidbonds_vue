@@ -1,30 +1,76 @@
 <template>
-  <nav>
-    <router-link to="/">Home</router-link> |
-    <router-link to="/about">About</router-link>
-  </nav>
-  <router-view />
+	<div v-if="isLoggedIn">
+		<div class="layout-light side-menu overlayScroll">
+			<Header />
+			<main class="main-content">
+				<Sidebar />
+				<router-view />
+				<Footer />
+			</main>
+			<!-- <div id="overlayer">
+				<span class="loader-overlay">
+					<div class="atbd-spin-dots spin-lg">
+						<span class="spin-dot badge-dot dot-primary"></span>
+						<span class="spin-dot badge-dot dot-primary"></span>
+						<span class="spin-dot badge-dot dot-primary"></span>
+						<span class="spin-dot badge-dot dot-primary"></span>
+					</div>
+				</span>
+			</div> -->
+			<div class="overlay-dark-sidebar"></div>
+			<div class="customizer-overlay"></div>
+		</div>
+	</div>
+	<div v-else>
+		<router-view />
+	</div>
 </template>
 
-<style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
+<script>
+// css
+import "ant-design-vue/dist/antd.css";
+import 'vue-select/dist/vue-select.css';
+import "@/assets/css/plugin.min.css";
+import "@/assets/css/style.css";
+import "@/assets/css/dev.css";
 
-nav {
-  padding: 30px;
-}
+// js
+import "@/assets/js/plugins.min.js"
+import "@/assets/js/script.min.js"
+import "@/assets/js/main.js"
 
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
+// Components
+import Header from "@/components/Header";
+import Sidebar from "@/components/Sidebar";
+import Footer from "@/components/Footer";
 
-nav a.router-link-exact-active {
-  color: #42b983;
-}
-</style>
+import { onMounted, ref } from "vue";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+
+// const logged = true
+
+export default {
+	setup() {
+        const isLoggedIn = ref(true)
+		
+        onMounted(async()=>{
+            onAuthStateChanged(await getAuth(), (user)=>{
+                if (user) {
+                    isLoggedIn.value = true
+                }else {
+                    isLoggedIn.value = false
+                }
+            })
+        })
+
+		return {
+			isLoggedIn,
+		};
+	},
+	components: {
+		Header,
+		Sidebar,
+		Footer,
+	},
+};
+</script>
