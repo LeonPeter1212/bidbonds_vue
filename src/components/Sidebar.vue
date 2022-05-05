@@ -236,11 +236,24 @@ export default {
 				name: "Companies",
 				link: "#",
 				icon: "shopping-bag",
-				children: [],
+				children: [
+					{
+						name: "Onboarding",
+						link: "/companies/onboarding/",
+						icon: null,
+						children: [],
+					},
+					{
+						name: "Manage",
+						link: "/companies/manage/",
+						icon: null,
+						children: [],
+					},
+				],
 			},
 			{
 				name: "Bidbonds",
-				link: "#",
+				link: "/bidbonds/",
 				icon: "file",
 				children: [],
 			},

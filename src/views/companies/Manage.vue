@@ -55,7 +55,7 @@
 													<span class="px-3">or</span>
 													<router-link
 														class="btn btn-primary btn-sm"
-														to="#"
+														to="/companies/onboarding/"
 													>
 														<span
 															data-feather="plus"

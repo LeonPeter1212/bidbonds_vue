@@ -1380,6 +1380,7 @@
 							@click="prev"
 							v-show="current !== 0"
 							class="btn btn-outline-primary btn-default btn-squared fw-400 text-capitalize m-1"
+							type="button"
 						>
 							<i class="las la-arrow-left mr-10"></i>Previous
 						</button>
@@ -1387,8 +1388,17 @@
 							@click="next"
 							v-show="current !== steps.length - 1"
 							class="btn text-white btn-primary btn-default btn-squared text-capitalize m-1"
+							type="button"
 						>
 							Save & Next<i class="ml-10 mr-0 las la-arrow-right"></i>
+						</button>
+						<button
+							@click="next"
+							v-show="current == steps.length - 1"
+							class="btn text-white btn-primary btn-default btn-squared text-capitalize m-1"
+							type="button"
+						>
+							Submit<i class="ml-10 mr-0 las la-arrow-right"></i>
 						</button>
 					</div>
 				</div>
