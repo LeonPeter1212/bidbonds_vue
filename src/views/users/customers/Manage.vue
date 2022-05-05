@@ -18,19 +18,7 @@
 									</span>
 								</li>
 								<li class="atbd-breadcrumb__item">
-									<router-link to="#"> Users </router-link>
-									<span class="breadcrumb__seperator">
-										<span class="la la-slash"></span>
-									</span>
-								</li>
-								<li class="atbd-breadcrumb__item">
 									<router-link to="#"> Customers </router-link>
-									<span class="breadcrumb__seperator">
-										<span class="la la-slash"></span>
-									</span>
-								</li>
-								<li class="atbd-breadcrumb__item">
-									<router-link to="#">Manage</router-link>
 								</li>
 							</ul>
 						</div>
@@ -135,7 +123,48 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr></tr>
+												<tr
+													v-for="(coll, i) in custs"
+													:key="i"
+												>
+													<td>{{ coll.fname }} {{coll.lname}}</td>
+													<td>-</td>
+													<td>-</td>
+													<td>-</td>
+													<td class="d-flex">
+														<a-button
+															:loading="false"
+															class="btn btn-info btn-sm btn-squared mr-2"
+															@click="showModal(coll)"
+															>Edit</a-button
+														>
+														<!-- <a-modal
+															v-if="visible"
+															:visible="visible"
+															title="Edit Role"
+															centered
+															:footer="null"
+															@cancel="cancel"
+															width="80%"
+														>
+															<Editrole :role="selected" />
+														</a-modal> -->
+
+														<a-popconfirm
+															title="Are you sure delete this role?"
+															ok-text="Yes"
+															cancel-text="Cancel"
+															@confirm="deleterole(coll.docid)"
+															@cancel="cancel"
+														>
+															<button
+																class="btn btn-outline-danger btn-sm btn-squared mr-2"
+															>
+																Delete
+															</button>
+														</a-popconfirm>
+													</td>
+												</tr>
 											</tbody>
 										</table>
 									</div>
@@ -150,22 +179,81 @@
 </template>
 
 <script>
-import {Typography, Tooltip} from 'ant-design-vue'
+import { ref } from "vue";
+import VueFeather from "vue-feather";
+import {
+	Typography,
+	Tooltip,
+	Popconfirm,
+	message,
+	Modal,
+} from "ant-design-vue";
+import {
+	collection,
+	query,
+	getFirestore,
+	onSnapshot,
+	doc,
+	deleteDoc,
+	where,
+} from "firebase/firestore";
 
 const {Text} = Typography
 
 export default {
 	name: "CompanyProfile",
-	// data: () => ({
-	// 	companies: null,
-	// }),
+
+	setup() {
+		const db = ref();
+		const custs = ref([]);
+
+		const cancel = (e) => {
+			selected.value = null;
+			visible.value=false;
+		};
+
+		const showModal = (role) => {
+			selected.value = role;
+			visible.value = true;
+		};
+
+		return {
+			db, custs,
+			cancel,
+			showModal,
+		}
+	},
+
     components: {
-        ATooltip: Tooltip,
-        AText: Text,
+		ATooltip: Tooltip,
+		AText: Text,
+		APopconfirm: Popconfirm,
+		AModal: Modal,
+		VueFeather,
     },
-	// created() {
-	// 	this.companies = this.$store.getters.getCompanies;
-    //     console.log(this.companies[0].onboarding);
-	// },
+
+	methods: {
+		message() {
+			return message;
+		},
+		async deleterole(id) {
+			await deleteDoc(doc(this.db, "users", id))
+				.then(()=>message.info("Customer deleted successfully."))
+				.catch(err=>console.log(err));
+		},
+	},
+
+	async beforeCreate() {
+		this.db = await getFirestore();
+
+		const q = query(collection(this.db, "users"), where("type", "==", "customer"));
+		onSnapshot(q, (querySnapshot) => {
+			const user = [];
+			querySnapshot.forEach((doc) => {
+				user.push({...doc.data(), docid: doc.id});
+			});
+			this.custs = user;
+		});
+	},
 };
 </script>

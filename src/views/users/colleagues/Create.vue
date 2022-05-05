@@ -140,13 +140,15 @@
 										class="form-control ih-medium ip-gray radius-xs b-light px-15"
 										name="branch"
 										v-model="colstate.branch"
+										:options="branches"
+										multiple
 									/>
-									<!-- <span
+									<span
 										class="error"
 										v-if="v$cols.branch.$error"
 									>
 										{{ v$cols.branch.$errors[0].$message }}
-									</span> -->
+									</span>
 								</div>
 
 								<div class="form-group col-md-6">
@@ -159,6 +161,7 @@
 										name="role"
 										v-model="colstate.role"
 										:options="roles"
+										multiple
 									/>
 									<span
 										class="error"
@@ -205,22 +208,24 @@ import {
 	addDoc,
 } from "firebase/firestore";
 import { createUserWithEmailAndPassword, getAuth } from "@firebase/auth";
+
 import router from "../../../router";
 
 export default {
 	setup() {
 		const db = ref();
-		const roles = ref([]);
 		const countries = ref([]);
+		const branches = ref([]);
+		const roles = ref([]);
 
 		const colstate = reactive({
 			fname: "",
 			lname: "",
-			country: "",
+			country: null,
 			phone: "",
 			email: "",
-			branch: "",
-			role: "",
+			branch: null,
+			role: null,
 		});
 
 		const colrules = {
@@ -254,12 +259,12 @@ export default {
 					required
 				),
 			},
-			// branch: {
-			// 	required: helpers.withMessage(
-			// 		"Please select the branch.",
-			// 		required
-			// 	),
-			// },
+			branch: {
+				required: helpers.withMessage(
+					"Please select the branch.",
+					required
+				),
+			},
 			role: {
 				required: helpers.withMessage(
 					"Please select the role(s).",
@@ -273,6 +278,7 @@ export default {
 		const btnloading = ref(false);
 		const auth = ref();
 
+
 		return {
 			db,
 			roles,
@@ -280,7 +286,8 @@ export default {
 			colstate,
 			btnloading,
 			countries,
-			auth
+			auth,
+			branches
 		};
 	},
 
@@ -301,11 +308,10 @@ export default {
 		})
 
 		// Get list of roles
-		const q = query(collection(this.db, "/accounts/accid/roles"));
-		onSnapshot(q, (querySnapshot) => {
+		const roles_q = query(collection(this.db, "/accounts/accid/roles"));
+		onSnapshot(roles_q, (querySnapshot) => {
 			const roles = [];
 			querySnapshot.forEach((doc) => {
-				// console.log({...doc.data(), docid: doc.id});
 				roles.push({
 					...doc.data(),
 					value: doc.id,
@@ -314,55 +320,65 @@ export default {
 			});
 			this.roles = roles;
 		});
+
+		// Get list of branches
+		const branches_q = query(collection(this.db, "/accounts/accid/branches"));
+		onSnapshot(branches_q, (querySnapshot) => {
+			const branches = [];
+			querySnapshot.forEach((doc) => {
+				branches.push({
+					...doc.data(),
+					value: doc.id,
+					label: doc.data().name,
+				});
+			});
+			this.branches = branches;
+		});
 	},
 
 	methods: {
 		message: function() {
 			return message;
 		},
-		register: async function () {
-			const auth = await getAuth();
-			createUserWithEmailAndPassword(auth, this.colstate.email, "12345")
-				.then(() => {
-					console.log("User created successfully");
-				})
-				.catch((err) => {
-					message.error(
-						"The credentials entered either already exist or didn't match the required criteria."
-					);
-					console.log(err);
-				});
-		},
 
 		async submit() {
 			this.btnloading = true;
+			const auth = await getAuth()
 
 			this.v$cols.$validate();
 			if (!this.v$cols.$error) {
 				try {
-					await addDoc(collection(this.db, `users`), {
-						...this.colstate,
-						role: this.colstate.role.public_id,
-						type: "colleague",
-						public_id: Date.now(),
-						created: {
-							by: this.auth.currentUser.uid,
-							at: moment().format(),
-						},
-					}).then(()=>{
-						this.btnloading = false
-						message.success('Colleague successfully created.')
-						router.push("/users/colleagues/manage")
-					});
-					// this.register().then(async()=>{
-
-					// })
+					createUserWithEmailAndPassword(auth, this.colstate.email, "123456")
+						.then(async(userCredentials) => {
+							await addDoc(collection(this.db, `users`), {
+								...this.colstate,
+								uid: userCredentials.user.uid,
+								type: "colleague",
+								public_id: Date.now(),
+								created: {
+									by: this.auth.currentUser.uid,
+									at: moment().format(),
+								},
+							}).then(()=>{
+								this.btnloading = false
+								message.success('Colleague successfully created.')
+								router.push("/users/colleagues/manage")
+							});
+						})
+						.catch((err) => {
+							message.error(
+								"The credentials entered either already exist or didn't match the required criteria."
+							);
+							this.btnloading = false
+							console.log(err);
+						});
 				} catch (e) {
 					console.error("Error adding document: ", e);
 					this.btnloading = false
 				}
 				return;
 			}
+			this.btnloading = false
 		},
 	},
 };

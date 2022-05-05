@@ -18,13 +18,7 @@
 									</span>
 								</li>
 								<li class="atbd-breadcrumb__item">
-									<router-link to="#"> Users </router-link>
-									<span class="breadcrumb__seperator">
-										<span class="la la-slash"></span>
-									</span>
-								</li>
-								<li class="atbd-breadcrumb__item">
-									<router-link to="#"> Colleagues </router-link>
+									<router-link to="/users/colleagues/manage"> Colleagues </router-link>
 									<span class="breadcrumb__seperator">
 										<span class="la la-slash"></span>
 									</span>
@@ -166,7 +160,7 @@
 															title="Are you sure delete this role?"
 															ok-text="Yes"
 															cancel-text="Cancel"
-															@confirm="deleterole(coll.public_id)"
+															@confirm="deleterole(coll.docid)"
 															@cancel="cancel"
 														>
 															<button
@@ -207,6 +201,7 @@ import {
 	onSnapshot,
 	doc,
 	deleteDoc,
+	where,
 } from "firebase/firestore";
 
 const {Text} = Typography
@@ -249,7 +244,7 @@ export default {
 		},
 		async deleterole(id) {
 			await deleteDoc(doc(this.db, "users", id))
-				.then(()=>message.info("Role deleted successfully."))
+				.then(()=>message.info("Colleague deleted successfully."))
 				.catch(err=>console.log(err));
 		},
 	},
@@ -257,7 +252,7 @@ export default {
 	async beforeCreate() {
 		this.db = await getFirestore();
 
-		const q = query(collection(this.db, "users"));
+		const q = query(collection(this.db, "users"), where("type", "==", "colleague"));
 		onSnapshot(q, (querySnapshot) => {
 			const user = [];
 			querySnapshot.forEach((doc) => {

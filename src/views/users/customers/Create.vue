@@ -15,13 +15,7 @@
 									</span>
 								</li>
 								<li class="atbd-breadcrumb__item">
-									<router-link to="#"> Users </router-link>
-									<span class="breadcrumb__seperator">
-										<span class="la la-slash"></span>
-									</span>
-								</li>
-								<li class="atbd-breadcrumb__item">
-									<router-link to="#">
+									<router-link to="/users/customers/manage/">
 										Customers
 									</router-link>
 									<span class="breadcrumb__seperator">
@@ -40,33 +34,52 @@
 					</div>
 
 					<div class="col-lg-7">
-						<div class="d-flex mb-4 bg-white border p-3 rounded">
-							<input type="checkbox" class="checkbox mr-3" />
-							<div class="contactinfo">
-								<h6 class="mb-2">Account holder</h6>
-								<span
-									>Lorem ipsum dolor sit amet consectetur,
-									adipisicing elit. Temporibus voluptas
-									deserunt placeat debitis quibusdam
-									aspernatur inventore a dolor! Assumenda
-									reprehenderit sed illum cumque, culpa saepe
-									ea eos iusto exercitationem ipsum</span
-								>
+						<div>
+							<div class="d-flex bg-white border mb-4 p-3 rounded">
+								<input 
+								type="radio" 
+								name="holdertype" 
+								value="acc" 
+								v-model="custstate.holdertype" 
+								class="checkbox mr-3" />
+								<div class="contactinfo">
+									<h6 class="mb-2">Account holder</h6>
+									<span
+										>Lorem ipsum dolor sit amet consectetur,
+										adipisicing elit. Temporibus voluptas
+										deserunt placeat debitis quibusdam
+										aspernatur inventore a dolor! Assumenda
+										reprehenderit sed illum cumque, culpa saepe
+										ea eos iusto exercitationem ipsum</span
+									>
+								</div>
 							</div>
-						</div>
-						<div class="d-flex mb-4 bg-white border p-3 rounded">
-							<input type="checkbox" class="checkbox mr-3" />
-							<div class="contactinfo">
-								<h6 class="mb-2">Non-account holder</h6>
-								<span
-									>Lorem ipsum dolor sit amet consectetur
-									adipisicing elit. Rem nostrum aliquam cumque
-									harum ea aperiam similique consequuntur
-									natus voluptatibus aut totam omnis, odit,
-									repellat nesciunt cupiditate! Eos quisquam
-									exercitationem maxime</span
-								>
+							<div class="d-flex mb-4 bg-white border p-3 rounded">
+								<input 
+								type="radio" 
+								name="holdertype" 
+								value="nonacc" 
+								v-model="custstate.holdertype" 
+								class="checkbox mr-3" />
+								<div class="contactinfo">
+									<h6 class="mb-2">Non-account holder</h6>
+									<span
+										>Lorem ipsum dolor sit amet consectetur
+										adipisicing elit. Rem nostrum aliquam cumque
+										harum ea aperiam similique consequuntur
+										natus voluptatibus aut totam omnis, odit,
+										repellat nesciunt cupiditate! Eos quisquam
+										exercitationem maxime</span
+									>
+								</div>
 							</div>
+							<span
+								class="error"
+								v-if="v$cust.holdertype.$error"
+							>
+								{{ v$cust.holdertype.$errors[0].$message }}
+							</span>
+
 						</div>
 					</div>
 
@@ -79,13 +92,39 @@
 											<div class="form-group col-lg-12">
 												<label
 													class="color-dark fs-14 fw-500 align-center"
-													>Name</label
+													>First name</label
 												>
 												<input
 													type="text"
-													name="name"
+													name="fname"
+													v-model="custstate.fname"
 													class="form-control ih-medium ip-gray radius-xs b-light px-15"
 												/>
+												<span
+													class="error"
+													v-if="v$cust.fname.$error"
+												>
+													{{ v$cust.fname.$errors[0].$message }}
+												</span>
+											</div>
+
+											<div class="form-group col-lg-12">
+												<label
+													class="color-dark fs-14 fw-500 align-center"
+													>Last name</label
+												>
+												<input
+													type="text"
+													name="lname"
+													v-model="custstate.lname"
+													class="form-control ih-medium ip-gray radius-xs b-light px-15"
+												/>
+												<span
+													class="error"
+													v-if="v$cust.lname.$error"
+												>
+													{{ v$cust.lname.$errors[0].$message }}
+												</span>
 											</div>
 
 											<div class="form-group col-md-12">
@@ -98,6 +137,8 @@
 														style="width: 40%"
 														class="form-control ih-medium ip-gray radius-xs b-light px-15"
 														name="country"
+														v-model="custstate.country"
+														:options="countries"
 													/>
 													<span
 														class="d-flex align-items-center mx-2"
@@ -106,9 +147,22 @@
 													<input
 														type="text"
 														name="phone"
+														v-model="custstate.phone"
 														class="form-control ih-medium ip-gray radius-xs b-light px-15"
 													/>
 												</div>
+												<span
+													class="error"
+													v-if="v$cust.country.$error"
+												>
+													{{ v$cust.country.$errors[0].$message }}
+												</span>
+												<span
+													class="error"
+													v-if="v$cust.phone.$error"
+												>
+													{{ v$cust.phone.$errors[0].$message }}
+												</span>
 											</div>
 
 											<div class="form-group col-lg-12">
@@ -118,17 +172,26 @@
 												>
 												<input
 													type="email"
-													name="name"
+													name="email"
+													v-model="custstate.email"
 													class="form-control ih-medium ip-gray radius-xs b-light px-15"
 												/>
+												<span
+													class="error"
+													v-if="v$cust.email.$error"
+												>
+													{{ v$cust.email.$errors[0].$message }}
+												</span>
 											</div>
 
 											<div class="col-12">
-												<button
+												<a-button
+													:loading="btnloading"
+													@click="submit"
 													class="btn text-white btn-primary btn-default btn-squared text-capitalize m-1"
 												>
 													Create Account
-												</button>
+												</a-button>
 											</div>
 										</div>
 									</div>
@@ -143,15 +206,190 @@
 </template>
 
 <script>
-import { Card } from "ant-design-vue";
+import { ref, reactive } from "vue";
+import { Card, message, Button } from "ant-design-vue";
 import VueFeather from "vue-feather";
 import vSelect from "vue-select";
+import useVuelidate from "@vuelidate/core";
+import { required, email, helpers } from "@vuelidate/validators";
+import moment from "moment";
+import {
+	collection,
+	query,
+	getFirestore,
+	onSnapshot,
+	addDoc,
+} from "firebase/firestore";
+import { createUserWithEmailAndPassword, getAuth } from "@firebase/auth";
+
+import router from "../../../router";
 
 export default {
+	setup() {
+		const db = ref();
+		const countries = ref([]);
+		const branches = ref([]);
+		const roles = ref([]);
+
+		const custstate = reactive({
+			fname: "",
+			lname: "",
+			country: null,
+			phone: "",
+			email: "",
+			holdertype: null,
+		});
+
+		const custrules = {
+			fname: {
+				required: helpers.withMessage(
+					"Please enter the first name.",
+					required
+				),
+			},
+			lname: {
+				required: helpers.withMessage(
+					"Please enter the last name.",
+					required
+				),
+			},
+			country: {
+				required: helpers.withMessage(
+					"Please select a country.",
+					required
+				),
+			},
+			phone: {
+				required: helpers.withMessage(
+					"Please enter the phone number.",
+					required
+				),
+			},
+			email: {
+				required: helpers.withMessage(
+					"Please enter the email.",
+					required
+				),
+			},
+			holdertype: {
+				required: helpers.withMessage(
+					"Please select an account holder type.",
+					required
+				),
+			},
+		};
+
+		const v$cust = useVuelidate(custrules, custstate);
+
+		const btnloading = ref(false);
+		const auth = ref();
+
+
+		return {
+			db,
+			roles,
+			v$cust,
+			custstate,
+			btnloading,
+			countries,
+			auth,
+			branches
+		};
+	},
+
 	components: {
 		ACard: Card,
 		VueFeather,
 		vSelect,
+		AButton: Button,
+	},
+
+	async data() {
+		this.auth = await getAuth();
+	},
+
+	async beforeCreate() {
+		this.db = await getFirestore();
+		// this.auth = await getAuth();
+		this.countries = this.$store.state.countries.map(el=>{
+			el.label = `${el.a3} +${el.pc}`;
+			el.value = el.pc;
+			return el
+		})
+
+		// Get list of roles
+		const roles_q = query(collection(this.db, "/accounts/accid/roles"));
+		onSnapshot(roles_q, (querySnapshot) => {
+			const roles = [];
+			querySnapshot.forEach((doc) => {
+				roles.push({
+					...doc.data(),
+					value: doc.id,
+					label: doc.data().name,
+				});
+			});
+			this.roles = roles;
+		});
+
+		// Get list of branches
+		const branches_q = query(collection(this.db, "/accounts/accid/branches"));
+		onSnapshot(branches_q, (querySnapshot) => {
+			const branches = [];
+			querySnapshot.forEach((doc) => {
+				branches.push({
+					...doc.data(),
+					value: doc.id,
+					label: doc.data().name,
+				});
+			});
+			this.branches = branches;
+		});
+	},
+
+	methods: {
+		message: function() {
+			return message;
+		},
+
+		async submit() {
+			this.btnloading = true;
+			const auth = await getAuth()
+
+			this.v$cust.$validate();
+			if (!this.v$cust.$error) {
+				try {
+					createUserWithEmailAndPassword(auth, this.custstate.email, "123456")
+						.then(async(userCredentials) => {
+							await addDoc(collection(this.db, `users`), {
+								...this.custstate,
+								uid: userCredentials.user.uid,
+								type: "customer",
+								public_id: Date.now(),
+								created: {
+									by: this.auth.currentUser.uid,
+									at: moment().format(),
+								},
+							}).then(()=>{
+								this.btnloading = false
+								message.success('Customer successfully created.')
+								router.push("/users/customers/manage")
+							});
+						})
+					.catch((err) => {
+						message.error(
+							"The credentials entered either already exist or didn't match the required criteria."
+						);
+						this.btnloading = false
+						console.log(err);
+					});
+				} catch (e) {
+					console.error("Error adding document: ", e);
+					this.btnloading = false
+				}
+				return;
+			}
+			this.btnloading = false
+		},
 	},
 };
 </script>
