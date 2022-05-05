@@ -55,22 +55,24 @@
 													<span class="px-3">or</span>
 													<button
 														class="btn btn-warning btn-sm"
-													@click="
-														modalVisible = true
-													"
-                                                        type="button"
+														@click="
+															modalVisible = true
+														"
+														type="button"
 													>
 														Generate Report
 													</button>
 
-												<a-modal
-												title="Generate Report"
-												v-model:visible="modalVisible"
-												centered
-                                                :footer="null"
-												>
-													<ReportForm />
-												</a-modal>
+													<a-modal
+														title="Generate Report"
+														v-model:visible="
+															modalVisible
+														"
+														centered
+														:footer="null"
+													>
+														<ReportForm />
+													</a-modal>
 												</div>
 												<div
 													class="form-group atbd-select d-flex align-items-center adv-table-searchs__status my-3"
@@ -101,12 +103,15 @@
 													<th>
 														<span
 															class="userDatatable-title"
-															>Reference Number</span>
+															>Reference
+															Number</span
+														>
 													</th>
 													<th>
 														<span
 															class="userDatatable-title"
-															>Company Name</span>
+															>Company Name</span
+														>
 													</th>
 													<th>
 														<span
@@ -141,24 +146,39 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr v-for="(bond, i) in state.bonds" :key="i">
+												<tr
+													v-for="(
+														bond, i
+													) in state.bonds"
+													:key="i"
+												>
 													<td>
-														<span class="text-warning text-uppercase">{{bond.refno}}</span>
+														<span
+															class="text-warning text-uppercase"
+															>{{
+																bond.refno
+															}}</span
+														>
 													</td>
-													<td>{{bond.name}}</td>
-													<td>{{bond.amount}}</td>
-													<td>{{bond.start}}</td>
-													<td>{{bond.end}}</td>
+													<td>{{ bond.name }}</td>
+													<td>{{ bond.amount }}</td>
+													<td>{{ bond.start }}</td>
+													<td>{{ bond.end }}</td>
 													<td>
-															<span
-																class="bg-opacity-warning color-warning rounded-pill userDatatable-content-status active"
-																>{{bond.status}}</span></td>
-																<td>
+														<span
+															class="bg-opacity-warning color-warning rounded-pill userDatatable-content-status active"
+															>{{
+																bond.status
+															}}</span
+														>
+													</td>
+													<td>
 														<router-link
 															:to="`/bidbonds/${bond.id}/`"
 															class="btn btn-primary btn-sm"
 															>View</router-link
-														></td>
+														>
+													</td>
 												</tr>
 												<!-- <tr v-for="(company, i) in companies" :key="i">
 													<td>
@@ -229,14 +249,14 @@
 <script>
 import { ref } from "vue";
 import { reactive } from "vue";
-import {Typography, Tooltip, Modal} from 'ant-design-vue'
+import { Typography, Tooltip, Modal } from "ant-design-vue";
 import ReportForm from "./ReportForm.vue";
 
-const {Text} = Typography
+const { Text } = Typography;
 
 export default {
 	name: "CompanyProfile",
-    setup() {
+	setup() {
 		const state = reactive({
 			bonds: [
 				{
@@ -247,26 +267,26 @@ export default {
 					start: "28th Feb, 2022",
 					end: "28th May, 2022",
 					status: "Pending",
-				}
-			]
-		})
+				},
+			],
+		});
 
 		const modalVisible = ref(false);
 
 		return {
 			modalVisible,
-			state
+			state,
 		};
-    },
+	},
 	data: () => ({
 		companies: null,
 	}),
-    components: {
-        ATooltip: Tooltip,
-        AText: Text,
+	components: {
+		ATooltip: Tooltip,
+		AText: Text,
 		AModal: Modal,
-        ReportForm,
-    },
+		ReportForm,
+	},
 	created() {
 		this.companies = this.$store.getters.getCompanies;
 	},

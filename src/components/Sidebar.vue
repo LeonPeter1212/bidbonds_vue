@@ -27,8 +27,8 @@
 								<span class="menu-text">{{ child.name }}</span>
 							</router-link>
 
-							<a v-if="child.children.length > 0" class="has-child child flex-column justify-content-center align-items-start" :href="child.link">
-								<a>
+							<a v-if="child.children.length > 0" class="has-child child flex-column justify-content-center align-items-start p-0" :href="child.link">
+								<a style="padding: 20px;">
 									<vue-feather
 										:type="child.icon"
 										class="nav-icon"
@@ -37,7 +37,7 @@
 									<span class="toggle-icon"></span>
 								</a>
 
-								<ul style="padding-left: 14px; padding-top: 12px;" class="pb-0 w-full">
+								<ul style="padding-left: 14px;" class="py-0 w-full">
 									<li v-for="(item, k) in child.children" :key="k">
 										<router-link
 											:to="item.link"

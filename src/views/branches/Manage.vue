@@ -123,7 +123,48 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr></tr>
+												<tr
+													v-for="(branch, i) in branches"
+													:key="i"
+												>
+													<td>{{ branch.name }}</td>
+													<td>{{ branch.code }}</td>
+													<td>{{ branch.address }}</td>
+													<td>{{ 0 }}</td>
+													<td class="d-flex">
+														<a-button
+															:loading="false"
+															class="btn btn-info btn-sm btn-squared mr-2"
+															@click="showModal(branch)"
+															>Edit</a-button
+														>
+														<a-modal
+															v-if="visible"
+															:visible="visible"
+															title="Edit Role"
+															centered
+															:footer="null"
+															@cancel="cancel"
+															width="80%"
+														>
+															<Editrole :role="selected" />
+														</a-modal>
+
+														<a-popconfirm
+															title="Are you sure delete this role?"
+															ok-text="Yes"
+															cancel-text="Cancel"
+															@confirm="deleterole(branch.public_id)"
+															@cancel="cancel"
+														>
+															<button
+																class="btn btn-outline-danger btn-sm btn-squared mr-2"
+															>
+																Delete
+															</button>
+														</a-popconfirm>
+													</td>
+												</tr>
 											</tbody>
 										</table>
 									</div>
@@ -138,22 +179,93 @@
 </template>
 
 <script>
-import {Typography, Tooltip} from 'ant-design-vue'
+import { ref } from "vue";
+import VueFeather from "vue-feather";
+import {
+	Typography,
+	Tooltip,
+	Popconfirm,
+	message,
+	Modal,
+} from "ant-design-vue";
+import {
+	collection,
+	query,
+	getFirestore,
+	onSnapshot,
+	doc,
+	deleteDoc,
+} from "firebase/firestore";
 
-const {Text} = Typography
+const { Text } = Typography;
 
 export default {
 	name: "CompanyProfile",
-	// data: () => ({
-	// 	companies: null,
-	// }),
-    components: {
-        ATooltip: Tooltip,
-        AText: Text,
-    },
-	// created() {
-	// 	this.companies = this.$store.getters.getCompanies;
-    //     console.log(this.companies[0].onboarding);
-	// },
+
+	setup() {
+		const db = ref();
+		const branches = ref([]);
+		const visible = ref(false);
+		const selected = ref(null);
+
+
+		const confirm = (e) => {
+			console.log(e);
+			// message.success("Click on Yes");
+		};
+
+		const cancel = (e) => {
+			selected.value = null;
+			visible.value=false;
+		};
+
+		const showModal = (role) => {
+			// selected.value = role;
+			// visible.value = true;
+		};
+
+		return {
+			db,
+			branches,
+			confirm,
+			cancel,
+			visible,
+			showModal,
+			selected,
+		};
+	},
+
+	components: {
+		ATooltip: Tooltip,
+		AText: Text,
+		APopconfirm: Popconfirm,
+		AModal: Modal,
+		VueFeather,
+	},
+
+	methods: {
+		message() {
+			return message;
+		},
+		async deleterole(id) {
+			await deleteDoc(doc(this.db, "/accounts/accid/roles", id))
+				.then(()=>message.info("Role deleted successfully."))
+				.catch(err=>console.log(err));
+		},
+	},
+
+	async beforeCreate() {
+		this.db = await getFirestore();
+
+		const q = query(collection(this.db, "/accounts/accid/branches"));
+		onSnapshot(q, (querySnapshot) => {
+			const branches = [];
+			querySnapshot.forEach((doc) => {
+				// console.log({...doc.data(), docid: doc.id});
+				branches.push({...doc.data(), docid: doc.id});
+			});
+			this.branches = branches;
+		});
+	},
 };
 </script>

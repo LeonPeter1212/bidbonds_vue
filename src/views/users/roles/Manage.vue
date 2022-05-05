@@ -18,19 +18,7 @@
 									</span>
 								</li>
 								<li class="atbd-breadcrumb__item">
-									<router-link to="#"> Users </router-link>
-									<span class="breadcrumb__seperator">
-										<span class="la la-slash"></span>
-									</span>
-								</li>
-								<li class="atbd-breadcrumb__item">
-									<router-link to="#"> Roles </router-link>
-									<span class="breadcrumb__seperator">
-										<span class="la la-slash"></span>
-									</span>
-								</li>
-								<li class="atbd-breadcrumb__item">
-									<router-link to="#">Manage</router-link>
+									<router-link to="#">Roles</router-link>
 								</li>
 							</ul>
 						</div>
@@ -66,13 +54,12 @@
 													</div>
 													<span class="px-3">or</span>
 													<router-link
-														class="btn btn-primary btn-sm"
-														to="#"
+														class="btn btn-primary btn-sm d-flex align-items-center"
+														to="/users/roles/create/"
 													>
-														<span
-															data-feather="plus"
-															class="nav-icon"
-														></span>
+														<vue-feather
+															type="plus"
+														></vue-feather>
 														Create Role
 													</router-link>
 												</div>
@@ -118,7 +105,48 @@
 												</tr>
 											</thead>
 											<tbody>
-												<tr></tr>
+												<tr
+													v-for="(role, i) in roles"
+													:key="i"
+												>
+													<td>{{ role.name }}</td>
+													<td>{{ role.desc == "" ? "-" : role.desc }}</td>
+													<td>{{ 0 }}</td>
+													<td>{{ 0 }}</td>
+													<td class="d-flex">
+														<a-button
+															:loading="false"
+															class="btn btn-info btn-sm btn-squared mr-2"
+															@click="showModal(role)"
+															>Edit</a-button
+														>
+														<a-modal
+															v-if="visible"
+															:visible="visible"
+															title="Edit Role"
+															centered
+															:footer="null"
+															@cancel="cancel"
+															width="80%"
+														>
+															<Editrole :role="selected" />
+														</a-modal>
+
+														<a-popconfirm
+															title="Are you sure delete this role?"
+															ok-text="Yes"
+															cancel-text="Cancel"
+															@confirm="deleterole(role.docid)"
+															@cancel="cancel"
+														>
+															<button
+																class="btn btn-outline-danger btn-sm btn-squared mr-2"
+															>
+																Delete
+															</button>
+														</a-popconfirm>
+													</td>
+												</tr>
 											</tbody>
 										</table>
 									</div>
@@ -133,22 +161,96 @@
 </template>
 
 <script>
-import {Typography, Tooltip} from 'ant-design-vue'
+import { ref } from "vue";
+import VueFeather from "vue-feather";
+import {
+	Typography,
+	Tooltip,
+	Popconfirm,
+	message,
+	Modal,
+} from "ant-design-vue";
+import {
+	collection,
+	query,
+	getFirestore,
+	onSnapshot,
+	doc,
+	deleteDoc,
+} from "firebase/firestore";
 
-const {Text} = Typography
+import Editrole from "../../../components/roles/Edit.vue"
+
+const { Text } = Typography;
 
 export default {
 	name: "CompanyProfile",
-	// data: () => ({
-	// 	companies: null,
-	// }),
-    components: {
-        ATooltip: Tooltip,
-        AText: Text,
-    },
-	// created() {
-	// 	this.companies = this.$store.getters.getCompanies;
-    //     console.log(this.companies[0].onboarding);
-	// },
+
+	setup() {
+		const db = ref();
+		const roles = ref([]);
+		const visible = ref(false);
+		const selected = ref(null);
+
+
+		const confirm = (e) => {
+			console.log(e);
+			// message.success("Click on Yes");
+		};
+
+		const cancel = (e) => {
+			selected.value = null;
+			visible.value=false;
+		};
+
+		const showModal = (role) => {
+			selected.value = role;
+			visible.value = true;
+		};
+
+		return {
+			db,
+			roles,
+			confirm,
+			cancel,
+			visible,
+			showModal,
+			selected,
+		};
+	},
+
+	components: {
+		ATooltip: Tooltip,
+		AText: Text,
+		APopconfirm: Popconfirm,
+		AModal: Modal,
+		VueFeather,
+		Editrole,
+	},
+
+	methods: {
+		message() {
+			return message;
+		},
+		async deleterole(id) {
+			await deleteDoc(doc(this.db, "/accounts/accid/roles", id))
+				.then(()=>message.info("Role deleted successfully."))
+				.catch(err=>console.log(err));
+		},
+	},
+
+	async beforeCreate() {
+		this.db = await getFirestore();
+
+		const q = query(collection(this.db, "/accounts/accid/roles"));
+		onSnapshot(q, (querySnapshot) => {
+			const roles = [];
+			querySnapshot.forEach((doc) => {
+				// console.log({...doc.data(), docid: doc.id});
+				roles.push({...doc.data(), docid: doc.id});
+			});
+			this.roles = roles;
+		});
+	},
 };
 </script>

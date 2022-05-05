@@ -206,3 +206,11 @@
 .child.open {
     padding-bottom: 0px !important;
 }
+
+td {
+    font-size: 14px !important;
+}
+
+.ant-message {
+    z-index: 10000;
+}

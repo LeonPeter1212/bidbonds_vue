@@ -15,13 +15,7 @@
 									</span>
 								</li>
 								<li class="atbd-breadcrumb__item">
-									<router-link to="#"> Users </router-link>
-									<span class="breadcrumb__seperator">
-										<span class="la la-slash"></span>
-									</span>
-								</li>
-								<li class="atbd-breadcrumb__item">
-									<router-link to="#"> Roles </router-link>
+									<router-link to="/users/roles/manage"> Roles </router-link>
 									<span class="breadcrumb__seperator">
 										<span class="la la-slash"></span>
 									</span>
@@ -48,8 +42,18 @@
 									<input
 										type="text"
 										name="name"
+										v-model="rolesstate.name"
 										class="form-control ih-medium ip-gray radius-xs b-light px-15"
 									/>
+									<span
+										class="error"
+										v-if="v$roles.name.$error"
+									>
+										{{
+											v$roles.name.$errors[0]
+												.$message
+										}}
+									</span>
 								</div>
 
 								<div class="form-group col-12">
@@ -59,6 +63,7 @@
 									>
 									<textarea
 										name="desc"
+										v-model="rolesstate.desc"
 										class="form-control ip-gray radius-xs b-light px-15"
 										rows="5"
 									/>
@@ -96,7 +101,6 @@
 													<input
 														class="checkbox"
 														type="checkbox"
-														id="check-3"
 													/>
 													<label for="check-3">
 														<span
@@ -116,14 +120,23 @@
 															perm, i
 														) in permissions"
 														:key="i"
+														@click="
+															checkbox(perm.value)
+														"
 													>
 														<input
 															class="checkbox"
 															type="checkbox"
-															:name="perm.name"
+															:name="perm.value"
+															v-model="
+																rolesstate
+																	.perms[
+																	perm.value
+																]
+															"
 														/>
 														<label
-															for="check-grp-1"
+															:for="perm.value"
 														>
 															<span
 																class="checkbox-text text-black"
@@ -139,16 +152,17 @@
 									</a-card>
 								</div>
 
-								<div class="col-12">
-									<button
+								<div class="col-12 mb-4">
+									<a-button
 										class="btn text-white btn-primary btn-default btn-squared text-capitalize m-1"
 										type="button"
 										@click="create"
+										:loading="btnloading"
 									>
 										Create Role<i
 											class="ml-10 mr-0 las la-arrow-right"
 										></i>
-									</button>
+									</a-button>
 								</div>
 							</form>
 						</div>
@@ -161,20 +175,23 @@
 
 <script>
 import { ref } from "vue";
-import { Card } from "ant-design-vue";
+import { Card, Button, message } from "ant-design-vue";
 import VueFeather from "vue-feather";
+import { reactive } from "vue";
+import useVuelidate from "@vuelidate/core";
+import { required, helpers } from "@vuelidate/validators";
+import moment from "moment";
 
-import { collection, addDoc } from "firebase/firestore";
-import { getFirestore } from "firebase/firestore";
+import { collection, addDoc, getFirestore } from "firebase/firestore";
+import { getAuth } from '@firebase/auth';
 
-
-// import firebase from "firebase/app";
-// import "firebase/firestore";
-// const firestore = firebase.firestore();
+import router from "../../../router"
 
 export default {
 	name: "CreateRole",
 	setup() {
+		const btnloading = ref(false)
+
 		const permissions = ref([
 			{
 				text: "Create colleague",
@@ -248,35 +265,101 @@ export default {
 				text: "Edit customer",
 				value: "edit_customer",
 			},
-		])
+		]);
 
-		const db = ref()
+		const rolesstate = reactive({
+			name: "",
+			desc: "",
+			perms: {
+				create_colleague: false,
+				view_colleague: false,
+				edit_colleague: false,
+				reset_colleagues_password: false,
+				disable_colleague: false,
+				view_activity_logs: false,
+				create_reports: false,
+				create_branch: false,
+				view_branch: false,
+				update_branch: false,
+				delete_branch: false,
+				update_limit: false,
+				onboard_company: false,
+				view_company: false,
+				blacklist_company: false,
+				approve_company: false,
+				create_customer: false,
+				edit_customer: false,
+			},
+		});
+
+		const rolesrules = {
+			name: {
+				required: helpers.withMessage(
+					"Please enter the role's name.",
+					required
+				),
+			},
+		};
+
+		const v$roles = useVuelidate(rolesrules, rolesstate);
+
+		const db = ref();
+		const auth = ref();
 
 		return {
 			permissions,
-			db
-		}
+			rolesstate,
+			db,
+			v$roles,
+			auth,
+			btnloading,
+		};
 	},
 	components: {
 		ACard: Card,
 		VueFeather,
+		AButton: Button,
 	},
 	methods: {
+		message() {
+			return message;
+		},
+		moment() {
+			return moment;
+		},
 		async create() {
-			try {
-				const docRef = await addDoc(collection(this.db, "users"), {
-					first: "Ada",
-					last: "Lovelace",
-					born: 1815
-				});
-				console.log("Document written with ID: ", docRef.id);
-			} catch (e) {
-				console.error("Error adding document: ", e);
+			this.btnloading.value = true
+			
+			this.v$roles.$validate();
+			if (!this.v$roles.$error) {
+				try {
+					await addDoc(collection(this.db, `/accounts/accid/roles`), {
+						...this.rolesstate,
+						public_id: Date.now(),
+						created: {
+							by: this.auth.uid,
+							at: moment().format()
+						}
+					}).then(()=>{
+						this.btnloading.value = false
+						message.success('Role successfully created.')
+						router.push("/users/roles/manage")
+					});
+				} catch (e) {
+					console.error("Error adding document: ", e);
+					this.btnloading.value = false
+				}
+				return;
 			}
-		}
+
+		},
+		checkbox(perm) {
+			this.rolesstate.perms[perm] = !this.rolesstate.perms[perm];
+		},
 	},
-	mounted(){
+	async beforeCreate() {
 		this.db = getFirestore();
-	}
+		this.auth = await getAuth().currentUser;
+	},
 };
 </script>
