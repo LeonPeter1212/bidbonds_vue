@@ -64,7 +64,7 @@
 															font-weight-bold
 														"
 													>
-														Log in to youreBusiness account
+														Log in to your eBusiness account
 													</p>
 													<div
 														class="form-group mb-20"
