@@ -130,6 +130,7 @@ import { onMounted, ref } from "vue";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import VueFeather from "vue-feather";
 import router from "../router"
+import $ from 'jquery'
 
 export default {
 	name: "Sidebar",
@@ -157,6 +158,7 @@ export default {
 	},
 	methods: {
 		handleSignout: async function () {
+			$(".sidebar_nav .has-child ul").hide()
             signOut(await getAuth())
                 .then(()=>{
                     router.push('/login')

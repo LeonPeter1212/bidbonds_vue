@@ -1,6 +1,7 @@
 <template>
 	<aside class="sidebar">
-		<div class="sidebar__menu-group" v-if="auth?.currentUser?.uid !== null && user && user?.type !== `colleague`">
+	<!-- <button type="button" @click="test">sdsdf</button> -->
+		<div class="sidebar__menu-group" v-if="auth?.currentUser?.uid !== null && user?.type !== `colleague`">
 			<ul class="sidebar_nav" v-for="(route, i) in samenu" :key="i">
 				<li v-if="route.children.length == 0">
 					<router-link :to="route.link">
@@ -117,9 +118,12 @@ import {
 	onSnapshot,
 	addDoc,
 } from "firebase/firestore";
+import $ from 'jquery'
+					$(".sidebar_nav .has-child ul").hide()
 
 export default {
 	name: "Sidebar",
+
 	setup() {
 		const samenu = ref([
 			{
@@ -145,7 +149,7 @@ export default {
 								children: [],
 							},
 							{
-								name: "Customesr",
+								name: "Customers",
 								link: "/users/customers/create/",
 								icon: null,
 								children: [],
@@ -272,9 +276,16 @@ export default {
 			samenu, othermenu, auth, user
 		};
 	},
+
 	components: {
 		VueFeather,
 	},
+
+	// methods: {
+	// 	test() {
+	// 		$(".sidebar_nav .has-child ul").hide()
+	// 	}
+	// },
 
 	async beforeCreate() {
 		this.db = await getFirestore();
@@ -284,13 +295,12 @@ export default {
 		const users_q = query(collection(this.db, "users"));
 		onSnapshot(users_q, (querySnapshot) => {
 			// const users = [];
-			querySnapshot.forEach((doc) => {
-				if (doc.data().uid == this.auth.currentUser.uid) {
+			querySnapshot.forEach(async(doc) => {
+				if (doc.data().uid == await getAuth().currentUser.uid) {
 					this.user = doc.data()
-					console.log(this.user);
 				}
 				// users.push({
-				// 	...doc.data(),
+					// 	...doc.data(),
 				// 	value: doc.id,
 				// 	label: doc.data().name,
 				// });
