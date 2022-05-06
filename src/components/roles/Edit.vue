@@ -274,7 +274,14 @@ export default {
 						},
 					}).then(() => {
 						this.btnloading = false;
-						message.success("Role successfully updated.");
+						message.success({
+							content: "Role successfully updated.",
+							style: {
+								marginRight: '20px',
+								marginTop: '74px',
+								textAlign: 'right'
+							},
+						});
 						// router.push("/users/roles/manage")
 					})
 				} catch (e) {

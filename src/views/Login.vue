@@ -104,7 +104,7 @@
 															justify-content-center
 														"
 													>
-														<button
+														<a-button
 															class="
 																btn
 																btn-primary
@@ -120,9 +120,10 @@
 															@click="
 																login
 															"
+															:loading="btnloading"
 														>
 															Login
-														</button>
+														</a-button>
 													</div>
 												</div>
 											</div>
@@ -150,7 +151,8 @@ import { ref } from "vue";
 import router from "../router";
 // import useRouter from "vue-router"
 import {signInWithEmailAndPassword, getAuth} from 'firebase/auth'
-import {message} from 'ant-design-vue'
+import {message, Button} from 'ant-design-vue'
+import $ from "jquery"
 
 // const router = useRouter()
 
@@ -159,24 +161,37 @@ export default {
 		const email = ref("")	
 		const password = ref("")
 		const errMsg = ref()
+		const btnloading = ref(false)
 		
 		return {
 			email,
 			password,
 			errMsg,
+			btnloading,
 		}
 	},
 	name: "Login",
+	components: {
+		AButton: Button,
+	},
 	methods: {
 		message: function () {
 			return message
 		},
 		login: function () {
+			this.btnloading = true
 			const auth = getAuth()
 			signInWithEmailAndPassword(auth, email.value, password.value)
 				.then(()=>{
 					router.push('/')
-					message.success('Welcome.')
+					message.success({
+						content: 'Welcome.',
+						style: {
+							marginRight: '20px',
+							marginTop: '74px',
+							textAlign: 'right'
+						},
+					})
 				})
 				.catch((err)=>{
 					// console.log(err);
@@ -193,9 +208,20 @@ export default {
 					// 	default:
 					// 		break;
 					// }
-					message.error('The email or password is incorrect.')
+					this.btnloading = false
+					message.error({
+						content: 'The email or password is incorrect.',
+						style: {
+							marginRight: '20px',
+							marginTop: '74px',
+							textAlign: 'right'
+						},
+					})
 				})
 		},
 	},
+	// methods() {
+	// 	$(".sidebar_nav .has-child ul").hide()
+	// }
 };
 </script>

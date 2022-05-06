@@ -1,5 +1,6 @@
 import $ from "jquery";
 $(document).ready(function (e) {
+	
 	$(window).on("load", function () {
 		$(".loader-overlay").delay(500).fadeOut("slow"),
 			$("#overlayer").fadeOut(500, function () {

@@ -169,11 +169,25 @@ export default {
 			const auth = getAuth()
 			createUserWithEmailAndPassword(auth, email.value, password.value)
 				.then(()=>{
-					message.success('User created successfully')
+					message.success({
+						content: 'User created successfully.',
+						style: {
+							marginRight: '20px',
+							marginTop: '74px',
+							textAlign: 'right'
+						},
+					})
 					router.push('/')
 				})
 				.catch((err)=>{
-					message.error('The credentials entered didn\'t match the required criteria.')
+					message.error({
+						content: 'The credentials entered didn\'t match the required criteria.',
+						style: {
+							marginRight: '20px',
+							marginTop: '74px',
+							textAlign: 'right'
+						},
+					})
 					console.log(err)
 				})
 		},

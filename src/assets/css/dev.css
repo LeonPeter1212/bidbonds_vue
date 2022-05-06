@@ -214,3 +214,12 @@ td {
 .ant-message {
     z-index: 10000;
 }
+
+.ant-message-notice-content {
+    border-radius: 10px !important;
+}
+
+.ant-message-custom-content {
+    display: flex;
+    align-items: center;
+}

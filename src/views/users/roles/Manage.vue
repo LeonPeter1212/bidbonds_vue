@@ -235,7 +235,14 @@ export default {
 		},
 		async deleterole(id) {
 			await deleteDoc(doc(this.db, "/accounts/accid/roles", id))
-				.then(()=>message.info("Role deleted successfully."))
+				.then(()=>message.info({
+					content: "Role deleted successfully.",
+					style: {
+						marginRight: '20px',
+						marginTop: '74px',
+						textAlign: 'right'
+					},
+				}))
 				.catch(err=>console.log(err));
 		},
 	},

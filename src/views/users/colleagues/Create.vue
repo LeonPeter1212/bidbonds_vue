@@ -361,13 +361,26 @@ export default {
 								},
 							}).then(()=>{
 								this.btnloading = false
-								message.success('Colleague successfully created.')
+								message.success({
+									content: 'Colleague successfully created.',
+									style: {
+										marginRight: '20px',
+										marginTop: '74px',
+										textAlign: 'right'
+									},
+								})
 								router.push("/users/colleagues/manage")
 							});
 						})
 						.catch((err) => {
-							message.error(
-								"The credentials entered either already exist or didn't match the required criteria."
+							message.error({
+									content: "The credentials entered either already exist or didn't match the required criteria.",
+									style: {
+										marginRight: '20px',
+										marginTop: '74px',
+										textAlign: 'right'
+									},
+								}
 							);
 							this.btnloading = false
 							console.log(err);

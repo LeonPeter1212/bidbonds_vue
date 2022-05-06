@@ -200,9 +200,14 @@ export default {
 					console.log("User created successfully");
 				})
 				.catch((err) => {
-					message.error(
-						"The credentials entered either already exist or didn't match the required criteria."
-					);
+					message.error({
+						content: "The credentials entered either already exist or didn't match the required criteria.",
+						style: {
+							marginRight: '20px',
+							marginTop: '74px',
+							textAlign: 'right'
+						},
+					});
 					console.log(err);
 				});
 		},
@@ -222,7 +227,14 @@ export default {
 						},
 					}).then(()=>{
 						this.btnloading = false
-						message.success('Branch successfully created.')
+						message.success({
+							content: 'Branch successfully created.',
+							style: {
+								marginRight: '20px',
+								marginTop: '74px',
+								textAlign: 'right'
+							},
+						})
 						router.push("/branches/manage")
 					});
 					// this.register().then(async()=>{

@@ -342,7 +342,14 @@ export default {
 						}
 					}).then(()=>{
 						this.btnloading.value = false
-						message.success('Role successfully created.')
+						message.success({
+							content: 'Role successfully created.',
+							style: {
+								marginRight: '20px',
+								marginTop: '74px',
+								textAlign: 'right'
+							},
+						})
 						router.push("/users/roles/manage")
 					});
 				} catch (e) {

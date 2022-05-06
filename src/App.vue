@@ -46,6 +46,7 @@ import Footer from "@/components/Footer";
 
 import { onMounted, ref } from "vue";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
+import $ from 'jquery';
 
 // const logged = true
 

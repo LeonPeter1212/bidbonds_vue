@@ -61,13 +61,13 @@
 					<!-- ends: nav-message -->
 					<li class="nav-author">
 						<div class="dropdown-custom">
-							<a href="#" class="nav-item-toggle"> JD </a>
+							<a href="#" class="nav-item-toggle">{{`${user.fname} ${user.lname}`.match(/\b(\w)/g).join('')}}</a>
 							<div class="dropdown-wrapper">
 								<div class="nav-author__info">
-									<div class="author-img">JD</div>
+									<div class="author-img">{{`${user.fname} ${user.lname}`.match(/\b(\w)/g).join('')}}</div>
 									<div>
-										<h6>John Doe</h6>
-										<span>Title Here</span>
+										<h6 class="text-capitalize">{{user.fname}} {{user.lname}}</h6>
+										<span>{{title(user.type)}}</span>
 									</div>
 								</div>
 								<div class="nav-author__options">
@@ -126,44 +126,71 @@
 </template>
 
 <script>
-import { onMounted, ref } from "vue";
+import { onMounted, ref, reactive } from "vue";
 import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import VueFeather from "vue-feather";
 import router from "../router"
-import $ from 'jquery'
+import {
+	collection,
+	query,
+	getFirestore,
+	onSnapshot,
+	doc,
+	deleteDoc,
+	where,
+} from "firebase/firestore";
 
 export default {
 	name: "Sidebar",
-	// setup() {
-    //     const isLoggedIn = ref(false)
-	// 	let auth;
-    //     onMounted(()=>{
-    //         auth = getAuth();
-    //         onAuthStateChanged(auth, (user)=>{
-    //             if (user) {
-    //                 isLoggedIn.value == true
-    //             }else {
-    //                 isLoggedIn.value == false
-    //             }
-    //         })
-    //     })
-    //     console.log(auth);
+	setup() {
+		const auth = ref(null);
+		const db = ref(null);
+		const user = ref('');
 
-	// 	return {
-    //         auth,
-	// 	};
-	// },
+		return {
+            auth,
+			user,
+			db,
+		};
+	},
 	components: {
 		VueFeather,
 	},
 	methods: {
+		title(type) {
+			switch (type) {
+				case 'sa':
+					return 'Super Admin'
+				case 'colleague':
+					return 'Colleague'
+			
+				default:
+					return '---'
+			}
+		},
 		handleSignout: async function () {
-			$(".sidebar_nav .has-child ul").hide()
             signOut(await getAuth())
                 .then(()=>{
                     router.push('/login')
                 });
 		},
 	},
+
+	async beforeCreate() {
+		this.db = await getFirestore();
+		this.auth = await getAuth().currentUser
+
+		// Get list of branches
+		const users_q = query(collection(this.db, "users"));
+		onSnapshot(users_q, (querySnapshot) => {
+			// const users = [];
+			querySnapshot.forEach(async(doc) => {
+				if (doc.data().uid == await getAuth().currentUser.uid) {
+					this.user = doc.data()
+					console.log(this.user);
+				}
+			});
+		});
+	}
 };
 </script>

@@ -238,7 +238,14 @@ export default {
 		},
 		async deleterole(id) {
 			await deleteDoc(doc(this.db, "users", id))
-				.then(()=>message.info("Customer deleted successfully."))
+				.then(()=>message.info({
+					content: "Customer deleted successfully.",
+					style: {
+						marginRight: '20px',
+						marginTop: '74px',
+						textAlign: 'right'
+					},
+				}))
 				.catch(err=>console.log(err));
 		},
 	},
