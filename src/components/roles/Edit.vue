@@ -196,7 +196,6 @@ export default {
 			},
 		]);
 
-// console.log(this.$props.role);
 		const rolesstate = ref({
 			name: "",
 			desc: "",
@@ -245,9 +244,6 @@ export default {
 			btnloading,
 		};
 	},
-    // data() {
-    //     this.rolesstate = this.$props.role
-    // },
 	components: {
 		ACard: Card,
 		VueFeather,
@@ -300,8 +296,6 @@ export default {
 		this.db = getFirestore();
 		this.auth = await getAuth().currentUser;
         this.rolesstate = this.$props.role
-        // this.rolesstate = role
-        // console.log(this.role);
 	},
 };
 </script>

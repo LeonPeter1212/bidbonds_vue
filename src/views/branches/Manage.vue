@@ -151,7 +151,7 @@
 														</a-modal>
 
 														<a-popconfirm
-															title="Are you sure delete this role?"
+															title="Are you sure delete this branch?"
 															ok-text="Yes"
 															cancel-text="Cancel"
 															@confirm="deleterole(branch.public_id)"

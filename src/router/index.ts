@@ -5,6 +5,7 @@ import TestView from "../Test.vue";
 import HomeView from "../views/Index.vue";
 import Customers from "../views/customers/Index.vue";
 import CustomerProfile from "../views/customers/profile/Index.vue";
+import UserCustomerProfile from "../views/users/customers/Profile.vue";
 import BidbondsProfile from "../views/bidbonds/profile/Index.vue";
 import CustomerCompanies from "../views/customers/profile/companies/Index.vue";
 import CustomerCompanyProfile from "../views/customers/profile/companies/profile/Index.vue";
@@ -67,6 +68,14 @@ const routes: Array<RouteRecordRaw> = [
     path: "/customers/:id",
     name: "customer_profile",
     component: CustomerProfile,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: "/users/customers/:id",
+    name: "user_customer_profile",
+    component: UserCustomerProfile,
     meta: {
       requiresAuth: true
     }

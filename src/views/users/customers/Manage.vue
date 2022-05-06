@@ -132,11 +132,10 @@
 													<td>-</td>
 													<td>-</td>
 													<td class="d-flex">
-														<a-button
-															:loading="false"
+														<router-link
+															:to="`/users/customers/${coll.docid}`"
 															class="btn btn-info btn-sm btn-squared mr-2"
-															@click="showModal(coll)"
-															>Edit</a-button
+															>Edit</router-link
 														>
 														<!-- <a-modal
 															v-if="visible"
@@ -151,7 +150,7 @@
 														</a-modal> -->
 
 														<a-popconfirm
-															title="Are you sure delete this role?"
+															title="Are you sure delete this customer?"
 															ok-text="Yes"
 															cancel-text="Cancel"
 															@confirm="deleterole(coll.docid)"

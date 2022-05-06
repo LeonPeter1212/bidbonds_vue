@@ -4,7 +4,7 @@
 
             <div class="container-fluid">
                 <div class="social-dash-wrap">
-                    <div class="row" v-if="auth?.currentUser?.uid !== null && user && user?.type !== `colleague`">
+                    <div class="row" v-if="user.type == `sa`">
 
                         <div class="col-lg-12">
                             <div class="breadcrumb-main">
@@ -25,7 +25,7 @@
                         </div>
                     </div>
                     
-                    <div class="row" v-else>
+                    <div class="row" v-else-if="user.type == `colleague`">
                         <div class="col-lg-12">
                             <div class="breadcrumb-main">
                                 <ul class="atbd-breadcrumb nav">
@@ -138,10 +138,13 @@ const superadmindashcards = [
 export default {
     setup() {
         
-		const auth = ref();
-		const user = ref();
+		const db = ref(null);
+		const auth = ref(null);
+		const user = ref({
+            type: ''
+        });
 
-        return {auth, user}
+        return {db, auth, user}
     },
 
 	async beforeCreate() {
@@ -158,6 +161,22 @@ export default {
             tradefindashcards,
             superadmindashcards,
         }
-    }
+    },
+
+	async beforeCreate() {
+		this.db = await getFirestore();
+		this.auth = await getAuth().currentUser;
+
+		// Get list of branches
+		const users_q = query(collection(this.db, "users"));
+		onSnapshot(users_q, (querySnapshot) => {
+			// const users = [];
+			querySnapshot.forEach(async (doc) => {
+				if (doc.data().uid == (await getAuth().currentUser.uid)) {
+					this.user = doc.data();
+				}
+			});
+		});
+	},
 }
 </script>

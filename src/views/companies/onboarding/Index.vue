@@ -1425,8 +1425,8 @@ export default {
 		const companystate = reactive({
 			// Company information
 			name: "",
-			sector: "",
-			country: "",
+			sector: null,
+			country: null,
 			phone: "",
 			email: "",
 			phyaddr: "",
@@ -1440,11 +1440,11 @@ export default {
 			fname: "",
 			lname: "",
 			oname: "",
-			gender: "",
+			gender: null,
 			shares: "",
-			nationality: "",
+			nationality: null,
 			cittype: null,
-			country: "",
+			country: null,
 			phone: "",
 			email: "",
 		});

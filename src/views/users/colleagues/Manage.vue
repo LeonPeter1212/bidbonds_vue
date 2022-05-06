@@ -144,20 +144,20 @@
 															@click="showModal(coll)"
 															>Edit</a-button
 														>
-														<!-- <a-modal
+														<a-modal
 															v-if="visible"
 															:visible="visible"
-															title="Edit Role"
+															title="Edit Colleague"
 															centered
 															:footer="null"
 															@cancel="cancel"
 															width="80%"
 														>
-															<Editrole :role="selected" />
-														</a-modal> -->
+															<Editrole :coll="selected" />
+														</a-modal>
 
 														<a-popconfirm
-															title="Are you sure delete this role?"
+															title="Are you sure delete this colleague?"
 															ok-text="Yes"
 															cancel-text="Cancel"
 															@confirm="deleterole(coll.docid)"
@@ -204,6 +204,8 @@ import {
 	where,
 } from "firebase/firestore";
 
+import Editrole from "../../../components/colleagues/Edit.vue"
+
 const {Text} = Typography
 
 export default {
@@ -212,6 +214,8 @@ export default {
 	setup() {
 		const db = ref();
 		const colls = ref([]);
+		const visible = ref(false);
+		const selected = ref(null);
 
 		const cancel = (e) => {
 			selected.value = null;
@@ -227,6 +231,8 @@ export default {
 			db, colls,
 			cancel,
 			showModal,
+			visible,
+			selected,
 		}
 	},
 
@@ -236,6 +242,7 @@ export default {
 		APopconfirm: Popconfirm,
 		AModal: Modal,
 		VueFeather,
+		Editrole,
     },
 
 	methods: {
@@ -261,13 +268,12 @@ export default {
 
 		const q = query(collection(this.db, "users"), where("type", "==", "colleague"));
 		onSnapshot(q, (querySnapshot) => {
-			const user = [];
+			const users = [];
 			querySnapshot.forEach((doc) => {
 				// console.log({...doc.data(), docid: doc.id});
-				user.push({...doc.data(), docid: doc.id});
+				users.push({...doc.data(), docid: doc.id});
 			});
-			this.colls = user;
-			console.log(this.colls);
+			this.colls = users;
 		});
 	},
 };

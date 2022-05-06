@@ -114,7 +114,7 @@ export default {
 								children: [],
 							},
 							{
-								name: "Customesr",
+								name: "Customers",
 								link: "/users/customers/create/",
 								icon: null,
 								children: [],
@@ -485,17 +485,9 @@ export default {
 			querySnapshot.forEach(async (doc) => {
 				if (doc.data().uid == (await getAuth().currentUser.uid)) {
 					this.user = doc.data();
-					// console.log(this.user.type);
 				}
-				// users.push({
-				// 	...doc.data(),
-				// 	value: doc.id,
-				// 	label: doc.data().name,
-				// });
 			});
-			// this.users = users;
 		});
-		// console.log(this.users);
 	},
 };
 </script>

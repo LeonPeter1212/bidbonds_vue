@@ -187,7 +187,6 @@ export default {
 			querySnapshot.forEach(async(doc) => {
 				if (doc.data().uid == await getAuth().currentUser.uid) {
 					this.user = doc.data()
-					console.log(this.user);
 				}
 			});
 		});
