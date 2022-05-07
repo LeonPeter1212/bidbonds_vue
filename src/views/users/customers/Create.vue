@@ -35,7 +35,10 @@
 
 					<div class="col-lg-7">
 						<div>
-							<div class="d-flex bg-white border mb-4 p-3 rounded">
+							<div 
+								:class="`d-flex border mb-4 p-3 rounded-lg holder ${custstate.holdertype == 'acc' ? 'activeholder' : null}`"
+								@click="custstate.holdertype = 'acc'"
+							>
 								<input 
 								type="radio" 
 								name="holdertype" 
@@ -54,7 +57,10 @@
 									>
 								</div>
 							</div>
-							<div class="d-flex mb-4 bg-white border p-3 rounded">
+							<div 
+								:class="`d-flex border mb-4 p-3 rounded-lg holder ${custstate.holdertype == 'nonacc' ? 'activeholder' : null}`"
+								@click="custstate.holdertype = 'nonacc'"
+							>
 								<input 
 								type="radio" 
 								name="holdertype" 
@@ -84,7 +90,50 @@
 					</div>
 
 					<div class="col-lg-5">
-						<div class="Vertical-form">
+						<div class="Vertical-form" v-show="custstate.holdertype == 'acc'">
+							<form action="#">
+								<div class="card">
+									<div class="card-body">
+										<div class="row">
+											<div class="form-group col-lg-12">
+												<label
+													class="color-dark fs-14 fw-500 align-center"
+													>Bank account number</label
+												>
+												<input
+													type="number"
+													name="ban"
+													class="form-control ih-medium ip-gray radius-xs b-light px-15"
+												/>
+											</div>
+
+											<div class="form-group col-lg-12">
+												<label
+													class="color-dark fs-14 fw-500 align-center"
+													>Account name</label
+												>
+												<input
+													type="text"
+													name="an"
+													class="form-control ih-medium ip-gray radius-xs b-light px-15"
+												/>
+											</div>
+
+											<div class="col-12">
+												<a-button
+													class="btn text-white btn-primary btn-default btn-squared text-capitalize m-1"
+													type="button"
+													@click="validateform"
+												>
+													Validate
+												</a-button>
+											</div>
+										</div>
+									</div>
+								</div>
+							</form>
+						</div>
+						<div class="Vertical-form" v-show="custstate.holdertype == 'nonacc'">
 							<form action="#">
 								<div class="card">
 									<div class="card-body">
@@ -237,7 +286,7 @@ export default {
 			country: null,
 			phone: "",
 			email: "",
-			holdertype: null,
+			holdertype: "nonacc",
 		});
 
 		const custrules = {
@@ -351,6 +400,16 @@ export default {
 			return message;
 		},
 
+		validateform() {
+			message.info({
+				content: "This form is currently inactive.",
+				style: {
+					marginRight: '20px',
+					textAlign: 'right'
+				},
+			})
+		},
+
 		async submit() {
 			this.btnloading = true;
 			const auth = await getAuth()
@@ -375,7 +434,6 @@ export default {
 									content: 'Customer successfully created.',
 									style: {
 										marginRight: '20px',
-										marginTop: '74px',
 										textAlign: 'right'
 									},
 								})
@@ -387,7 +445,6 @@ export default {
 							content: "The credentials entered either already exist or didn't match the required criteria.",
 							style: {
 								marginRight: '20px',
-								marginTop: '74px',
 								textAlign: 'right'
 							},
 						});

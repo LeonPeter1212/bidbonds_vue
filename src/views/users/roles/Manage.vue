@@ -239,7 +239,6 @@ export default {
 					content: "Role deleted successfully.",
 					style: {
 						marginRight: '20px',
-						marginTop: '74px',
 						textAlign: 'right'
 					},
 				}))

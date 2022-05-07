@@ -206,7 +206,7 @@ export default {
 			},
 			{
 				name: "Customers",
-				link: "/users/customers/manage/",
+				link: "/customers/",
 				icon: "users",
 				children: [],
 				meta: {

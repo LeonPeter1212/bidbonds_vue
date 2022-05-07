@@ -11,6 +11,7 @@
     "@types/vue-select": "^3.16.0",
     "@vuelidate/core": "^2.0.0-alpha.40",
     "@vuelidate/validators": "^2.0.0-alpha.28",
+    "africastalking": "^0.5.5",
     "ahooks-vue": "^0.12.9",
     "ant-design-vue": "^3.2.0",
     "bcryptjs": "^2.4.3",

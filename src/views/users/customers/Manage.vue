@@ -241,7 +241,6 @@ export default {
 					content: "Customer deleted successfully.",
 					style: {
 						marginRight: '20px',
-						marginTop: '74px',
 						textAlign: 'right'
 					},
 				}))

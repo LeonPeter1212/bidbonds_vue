@@ -188,7 +188,6 @@ export default {
 						content: 'Welcome.',
 						style: {
 							marginRight: '20px',
-							marginTop: '74px',
 							textAlign: 'right'
 						},
 					})
@@ -213,7 +212,6 @@ export default {
 						content: 'The email or password is incorrect.',
 						style: {
 							marginRight: '20px',
-							marginTop: '74px',
 							textAlign: 'right'
 						},
 					})

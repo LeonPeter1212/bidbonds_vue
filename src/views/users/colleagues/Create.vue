@@ -365,7 +365,6 @@ export default {
 									content: 'Colleague successfully created.',
 									style: {
 										marginRight: '20px',
-										marginTop: '74px',
 										textAlign: 'right'
 									},
 								})
@@ -377,7 +376,6 @@ export default {
 									content: "The credentials entered either already exist or didn't match the required criteria.",
 									style: {
 										marginRight: '20px',
-										marginTop: '74px',
 										textAlign: 'right'
 									},
 								}

@@ -346,7 +346,6 @@ export default {
 							content: 'Role successfully created.',
 							style: {
 								marginRight: '20px',
-								marginTop: '74px',
 								textAlign: 'right'
 							},
 						})

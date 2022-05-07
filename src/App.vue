@@ -24,6 +24,7 @@
 	<div v-else>
 		<router-view />
 	</div>
+	<div class="recaptcha-container"></div>
 </template>
 
 <script>
@@ -45,17 +46,15 @@ import Sidebar from "@/components/Sidebar";
 import Footer from "@/components/Footer";
 
 import { onMounted, ref } from "vue";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
-import $ from 'jquery';
-
-// const logged = true
+import { getAuth, onAuthStateChanged, RecaptchaVerifier } from "firebase/auth";
 
 export default {
 	setup() {
         const isLoggedIn = ref(true)
+		const auth = getAuth();
 		
         onMounted(async()=>{
-            onAuthStateChanged(await getAuth(), (user)=>{
+            onAuthStateChanged(await auth, (user)=>{
                 if (user) {
                     isLoggedIn.value = true
                 }else {

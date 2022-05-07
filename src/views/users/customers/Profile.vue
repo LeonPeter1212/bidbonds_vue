@@ -721,7 +721,6 @@ export default {
 							content: "Customer successfully updated.",
 							style: {
 								marginRight: '20px',
-								marginTop: '74px',
 								textAlign: 'right'
 							},
 						});

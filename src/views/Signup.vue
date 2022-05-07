@@ -173,7 +173,6 @@ export default {
 						content: 'User created successfully.',
 						style: {
 							marginRight: '20px',
-							marginTop: '74px',
 							textAlign: 'right'
 						},
 					})
@@ -184,7 +183,6 @@ export default {
 						content: 'The credentials entered didn\'t match the required criteria.',
 						style: {
 							marginRight: '20px',
-							marginTop: '74px',
 							textAlign: 'right'
 						},
 					})

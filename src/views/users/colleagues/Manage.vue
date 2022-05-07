@@ -255,7 +255,7 @@ export default {
 					content: "Colleague deleted successfully.",
 					style: {
 						marginRight: '20px',
-						marginTop: '74px',
+						
 						textAlign: 'right'
 					},
 				}))

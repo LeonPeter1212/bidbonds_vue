@@ -15,7 +15,9 @@
 							:id="i"
 						>
 							<span
-								:class="`${i < current ? 'las la-check' : null}`"
+								:class="`${
+									i < current ? 'las la-check' : null
+								}`"
 								>{{ i >= current ? i + 1 : null }}</span
 							>
 							<span>{{ step.title }}</span>
@@ -52,7 +54,10 @@
 											class="error"
 											v-if="v$company.name.$error"
 										>
-											{{ v$company.name.$errors[0].$message }}
+											{{
+												v$company.name.$errors[0]
+													.$message
+											}}
 										</span>
 									</div>
 
@@ -72,7 +77,8 @@
 											v-if="v$company.sector.$error"
 										>
 											{{
-												v$company.sector.$errors[0].$message
+												v$company.sector.$errors[0]
+													.$message
 											}}
 										</span>
 									</div>
@@ -115,7 +121,8 @@
 											v-if="v$company.phone.$error"
 										>
 											{{
-												v$company.phone.$errors[0].$message
+												v$company.phone.$errors[0]
+													.$message
 											}}
 										</span>
 									</div>
@@ -136,7 +143,8 @@
 											v-if="v$company.email.$error"
 										>
 											{{
-												v$company.email.$errors[0].$message
+												v$company.email.$errors[0]
+													.$message
 											}}
 										</span>
 									</div>
@@ -236,7 +244,9 @@
 													<span class="px-3">or</span>
 													<button
 														class="btn btn-primary btn-sm"
-														@click="modalVisible = true"
+														@click="
+															modalVisible = true
+														"
 														type="button"
 													>
 														<i
@@ -250,7 +260,9 @@
 															modalVisible
 														"
 														centered
-														@ok="modalVisible = false"
+														@ok="
+															modalVisible = false
+														"
 														width="80%"
 														:footer="null"
 													>
@@ -263,8 +275,8 @@
 															>
 																<label
 																	class="color-dark fs-14 fw-500 align-center"
-																	>National ID /
-																	Passport
+																	>National ID
+																	/ Passport
 																	Number</label
 																>
 																<input
@@ -387,7 +399,9 @@
 																	>Phone
 																	Number</label
 																>
-																<div class="d-flex">
+																<div
+																	class="d-flex"
+																>
 																	<v-select
 																		style="
 																			width: 40%;
@@ -406,7 +420,7 @@
 																		>-</span
 																	>
 																	<input
-																		type="text"
+																		type="number"
 																		name="phone"
 																		v-model="
 																			directorsstate.phone
@@ -522,7 +536,7 @@
 																	Shares</label
 																>
 																<input
-																	type="text"
+																	type="number"
 																	name="shares"
 																	v-model="
 																		directorsstate.shares
@@ -560,7 +574,7 @@
 																		directorsstate.nationality
 																	"
 																	:options="
-																		genders
+																		nationalities
 																	"
 																/>
 																<span
@@ -595,7 +609,7 @@
 																		directorsstate.cittype
 																	"
 																	:options="
-																		genders
+																		cittypelist
 																	"
 																/>
 																<span
@@ -620,6 +634,10 @@
 														>
 															<button
 																class="btn btn-primary btn-default px-3 justify-content-center flex align-items-center"
+																type="button"
+																@click="
+																	addNewDirector
+																"
 															>
 																<i
 																	class="ml-0 las la-plus"
@@ -641,7 +659,9 @@
 													>
 														<option>All</option>
 														<option>Pending</option>
-														<option>Complete</option>
+														<option>
+															Complete
+														</option>
 													</select>
 												</div>
 											</form>
@@ -650,25 +670,27 @@
 											class="table mb-0 mt-2 table-borderless"
 										>
 											<thead>
-												<tr class="userDatatable-header">
+												<tr
+													class="userDatatable-header"
+												>
 													<th>
 														<span
 															class="userDatatable-title"
-															>Director's Name</span
+															>Director's
+															Name</span
 														>
 													</th>
 													<th>
 														<span
 															class="userDatatable-title"
-															>National ID/ Passport
-															ID</span
+															>National ID/
+															Passport ID</span
 														>
 													</th>
 													<th>
 														<span
 															class="userDatatable-title"
-															>Phone Number
-															Status</span
+															>Phone Number</span
 														>
 													</th>
 													<th>
@@ -694,8 +716,8 @@
 											<tbody>
 												<tr
 													v-for="(
-														company, i
-													) in companies"
+														director, i
+													) in directorslist"
 													:key="i"
 												>
 													<td>
@@ -704,7 +726,7 @@
 														>
 															<a-tooltip
 																:title="
-																	company.name
+																	director.fname
 																"
 																color="#016AB3"
 															>
@@ -713,9 +735,7 @@
 																	style="
 																		max-width: 200px;
 																	"
-																	:content="
-																		company.name
-																	"
+																	:content="`${director.fname} ${director.lname} ${director.oname}`"
 																/>
 															</a-tooltip>
 														</div>
@@ -724,51 +744,60 @@
 														<div
 															class="userDatatable-content"
 														>
+															{{ director.nipn }}
+														</div>
+													</td>
+													<td>
+														<div
+															class="userDatatable-content"
+														>
+															+{{
+																director.country
+																	.value
+															}}
+															{{ director.phone }}
+														</div>
+													</td>
+													<td>
+														<div
+															class="userDatatable-content"
+														>
 															{{
-																company.sector.label
+																director.email
 															}}
 														</div>
 													</td>
 													<td>
 														<div
-															class="userDatatable-content d-inline-block"
+															class="userDatatable-content"
 														>
-															<span
-																class="bg-opacity-success color-success rounded-pill userDatatable-content-status active"
-																>Completed</span
-															>
+															{{
+																director.shares
+															}}%
 														</div>
 													</td>
 													<td>
-														<div
-															class="userDatatable-content d-inline-block"
+														<button
+															class="btn btn-outline-danger btn-sm btn-squared"
+															type="button"
+															@click="
+																removeDirector(
+																	i
+																)
+															"
 														>
-															<span
-																class="bg-opacity-success color-success rounded-pill userDatatable-content-status active"
-																v-if="
-																	company.onboarding ==
-																	'completed'
-																"
-																>Completed</span
-															>
-															<span
-																class="bg-opacity-warning color-warning rounded-pill userDatatable-content-status active"
-																v-else
-																>Pending</span
-															>
-														</div>
-													</td>
-													<td>
-														<router-link
-															:to="`#`"
-															class="btn btn-info btn-sm btn-squared"
-															>View</router-link
-														>
+															Delete
+														</button>
 													</td>
 												</tr>
-												<tr v-if="companies?.length == 0">
+												<tr
+													v-if="
+														directorslist?.length ==
+														0
+													"
+												>
 													<td
-														:colspan="companies.length"
+														:colspan="6"
 														class="text-center"
 													>
 														No data.
@@ -784,11 +813,14 @@
 							<div class="Vertical-form" v-show="current == 2">
 								<a-collapse v-model:activeKey="activeKey">
 									<!-- Directors -->
-									<a-collapse-panel key="directors" header="Directors">
+									<a-collapse-panel
+										key="directors"
+										header="Directors"
+									>
 										<a-collapse>
 											<a-collapse-panel
-												key="1"
-												header="Alamin Macharia"
+												v-for="(director, i) in dummydirectors" :key="i"
+												:header="director.name"
 											>
 												<div
 													class="table-responsive userDatatable"
@@ -816,7 +848,8 @@
 																<th>
 																	<span
 																		class="userDatatable-title"
-																		>Issue Date
+																		>Issue
+																		Date
 																		Status</span
 																	>
 																</th>
@@ -835,109 +868,32 @@
 															</tr>
 														</thead>
 														<tbody>
-															<!-- KRA PIN -->
-															<tr>
+															<tr v-for="(doc, d) in director.docs" :key="d">
 																<td>
-																	<div
-																		class="userDatatable-content"
-																	>
-																		<a-tooltip
-																			title="KRA PIN Certificate"
-																			color="#016AB3"
-																		>
-																			<a-text
-																				ellipsis="true"
-																				style="
-																					max-width: 200px;
-																				"
-																				content="KRA PIN Certificate"
-																			/>
-																		</a-tooltip>
-																	</div>
+																	<div class="userDatatable-content">{{doc.name}}</div>
 																</td>
 																<td>
-																	<div
-																		class="userDatatable-content"
-																	>
-																		N/A
-																	</div>
+																	<div class="userDatatable-content">{{doc.sn==null ? "N/A" : doc.sn}}</div>
 																</td>
 																<td>
-																	<div
-																		class="userDatatable-content d-inline-block"
-																	>
-																		N/A
-																	</div>
+																	<div class="userDatatable-content">{{doc.date==null ? "N/A" : doc.date}}</div>
 																</td>
 																<td>
-																	<div
-																		class="userDatatable-content d-inline-block"
-																	>
+																	<div class="userDatatable-content">
 																		<span
 																			class="bg-opacity-warning color-warning rounded-pill userDatatable-content-status active"
-																			>Unavailable</span
+																			>{{doc.status}}</span
+																		></div>
+																</td>
+																<td>
+																	<div class="userDatatable-content">
+																		<button
+																			class="btn btn-info btn-sm btn-squared"
+																			type="button"
 																		>
+																			Upload
+																		</button>
 																	</div>
-																</td>
-																<td>
-																	<router-link
-																		:to="`#`"
-																		class="btn btn-primary btn-sm btn-squared"
-																		>Upload</router-link
-																	>
-																</td>
-															</tr>
-
-															<!-- Tax Compliance -->
-															<tr>
-																<td>
-																	<div
-																		class="userDatatable-content"
-																	>
-																		<a-tooltip
-																			title="Tax Compliance Certificate"
-																			color="#016AB3"
-																		>
-																			<a-text
-																				ellipsis="true"
-																				style="
-																					max-width: 200px;
-																				"
-																				content="Tax Compliance Certificate"
-																			/>
-																		</a-tooltip>
-																	</div>
-																</td>
-																<td>
-																	<div
-																		class="userDatatable-content"
-																	>
-																		N/A
-																	</div>
-																</td>
-																<td>
-																	<div
-																		class="userDatatable-content d-inline-block"
-																	>
-																		N/A
-																	</div>
-																</td>
-																<td>
-																	<div
-																		class="userDatatable-content d-inline-block"
-																	>
-																		<span
-																			class="bg-opacity-warning color-warning rounded-pill userDatatable-content-status active"
-																			>Unavailable</span
-																		>
-																	</div>
-																</td>
-																<td>
-																	<router-link
-																		:to="`#`"
-																		class="btn btn-primary btn-sm btn-squared"
-																		>Upload</router-link
-																	>
 																</td>
 															</tr>
 														</tbody>
@@ -945,169 +901,14 @@
 												</div>
 											</a-collapse-panel>
 
-											<a-collapse-panel
-												key="2"
-												header="Phillip Munene"
-											>
-												<div
-													class="table-responsive userDatatable"
-												>
-													<table
-														class="table mb-0 mt-2 table-bordered"
-													>
-														<thead>
-															<tr
-																class="userDatatable-header"
-															>
-																<th>
-																	<span
-																		class="userDatatable-title"
-																		>Document</span
-																	>
-																</th>
-																<th>
-																	<span
-																		class="userDatatable-title"
-																		>Serial
-																		Number</span
-																	>
-																</th>
-																<th>
-																	<span
-																		class="userDatatable-title"
-																		>Issue Date
-																		Status</span
-																	>
-																</th>
-																<th>
-																	<span
-																		class="userDatatable-title"
-																		>Status</span
-																	>
-																</th>
-																<th>
-																	<span
-																		class="userDatatable-title"
-																		>Action</span
-																	>
-																</th>
-															</tr>
-														</thead>
-														<tbody>
-															<!-- KRA PIN -->
-															<tr>
-																<td>
-																	<div
-																		class="userDatatable-content"
-																	>
-																		<a-tooltip
-																			title="KRA PIN Certificate"
-																			color="#016AB3"
-																		>
-																			<a-text
-																				ellipsis="true"
-																				style="
-																					max-width: 200px;
-																				"
-																				content="KRA PIN Certificate"
-																			/>
-																		</a-tooltip>
-																	</div>
-																</td>
-																<td>
-																	<div
-																		class="userDatatable-content"
-																	>
-																		N/A
-																	</div>
-																</td>
-																<td>
-																	<div
-																		class="userDatatable-content d-inline-block"
-																	>
-																		N/A
-																	</div>
-																</td>
-																<td>
-																	<div
-																		class="userDatatable-content d-inline-block"
-																	>
-																		<span
-																			class="bg-opacity-warning color-warning rounded-pill userDatatable-content-status active"
-																			>Unavailable</span
-																		>
-																	</div>
-																</td>
-																<td>
-																	<router-link
-																		:to="`#`"
-																		class="btn btn-primary btn-sm btn-squared"
-																		>Upload</router-link
-																	>
-																</td>
-															</tr>
-
-															<!-- Tax Compliance -->
-															<tr>
-																<td>
-																	<div
-																		class="userDatatable-content"
-																	>
-																		<a-tooltip
-																			title="Tax Compliance Certificate"
-																			color="#016AB3"
-																		>
-																			<a-text
-																				ellipsis="true"
-																				style="
-																					max-width: 200px;
-																				"
-																				content="Tax Compliance Certificate"
-																			/>
-																		</a-tooltip>
-																	</div>
-																</td>
-																<td>
-																	<div
-																		class="userDatatable-content"
-																	>
-																		N/A
-																	</div>
-																</td>
-																<td>
-																	<div
-																		class="userDatatable-content d-inline-block"
-																	>
-																		N/A
-																	</div>
-																</td>
-																<td>
-																	<div
-																		class="userDatatable-content d-inline-block"
-																	>
-																		<span
-																			class="bg-opacity-warning color-warning rounded-pill userDatatable-content-status active"
-																			>Unavailable</span
-																		>
-																	</div>
-																</td>
-																<td>
-																	<router-link
-																		:to="`#`"
-																		class="btn btn-primary btn-sm btn-squared"
-																		>Upload</router-link
-																	>
-																</td>
-															</tr>
-														</tbody>
-													</table>
-												</div>
-											</a-collapse-panel>
 										</a-collapse>
 									</a-collapse-panel>
 
 									<!-- Company -->
-									<a-collapse-panel key="company" header="Company">
+									<a-collapse-panel
+										key="company"
+										header="Company"
+									>
 										<div
 											class="table-responsive userDatatable"
 										>
@@ -1390,7 +1191,9 @@
 							class="btn text-white btn-primary btn-default btn-squared text-capitalize m-1"
 							type="button"
 						>
-							Save & Next<i class="ml-10 mr-0 las la-arrow-right"></i>
+							Save & Next<i
+								class="ml-10 mr-0 las la-arrow-right"
+							></i>
 						</button>
 						<button
 							@click="next"
@@ -1415,6 +1218,7 @@ import { reactive } from "vue";
 import useVuelidate from "@vuelidate/core";
 import { required, email, helpers } from "@vuelidate/validators";
 import countriesjson from "@/assets/js/countries.json";
+import nationalitiesjson from "@/assets/js/nationalities.json";
 import { Modal, message, Tooltip, Typography, Collapse } from "ant-design-vue";
 
 const { Text } = Typography;
@@ -1441,7 +1245,7 @@ export default {
 			lname: "",
 			oname: "",
 			gender: null,
-			shares: "",
+			shares: null,
 			nationality: null,
 			cittype: null,
 			country: null,
@@ -1506,60 +1310,6 @@ export default {
 		};
 
 		const directorsformrules = {
-			// Company information
-			name: {
-				required: helpers.withMessage(
-					"Please enter the company name.",
-					required
-				),
-			},
-			sector: {
-				required: helpers.withMessage(
-					"Please select the key sector.",
-					required
-				),
-			},
-			country: {
-				required: helpers.withMessage(
-					"Please select a country code.",
-					required
-				),
-			},
-			phone: {
-				required: helpers.withMessage(
-					"Please enter the company's phone number.",
-					required
-				),
-			},
-			email: {
-				required: helpers.withMessage(
-					"Please enter the company's email address.",
-					required
-				),
-				email: helpers.withMessage(
-					"Please enter a valid email address.",
-					required
-				),
-			},
-			phyaddr: {
-				required: helpers.withMessage(
-					"Please enter the company's physical address.",
-					required
-				),
-			},
-			postaladdr: {
-				required: helpers.withMessage(
-					"Please enter the company's postal address.",
-					required
-				),
-			},
-			postalcode: {
-				required: helpers.withMessage(
-					"Please enter the company's postal code.",
-					required
-				),
-			},
-
 			// Directors
 			nipn: {
 				required: helpers.withMessage(
@@ -1634,7 +1384,35 @@ export default {
 		const modalVisible = ref(false);
 
 		// Accordion
-		const activeKey = ref(['directors']);
+		const activeKey = ref(["directors"]);
+
+		const directorslist = ref([]);
+
+		const countries = ref([]);
+
+		const nationalities = ref([]);
+
+		const dummydirectors = ref([
+			{
+				name: "Alamin Macharia",
+				docs: [
+					{
+						name: "KRA Certificate",
+						sn: null,
+						date: null,
+						status: 'Unavailable',
+						file: null,
+					},
+					{
+						name: "Tax Compliance Certificate",
+						sn: null,
+						date: null,
+						status: 'Unavailable',
+						file: null,
+					},
+				]
+			}
+		]);
 
 		return {
 			// Form validation
@@ -1642,17 +1420,22 @@ export default {
 			directorsstate,
 			v$company,
 			v$directors,
+			directorslist,
+			nationalities,
+			countries,
+			dummydirectors,
 
 			// Modal visiblility
 			modalVisible,
 
 			// Accordion
-			activeKey
+			activeKey,
 		};
 	},
+
 	data() {
 		return {
-			current: 0,
+			current: 2,
 			steps: [
 				{
 					title: "Company Information",
@@ -1664,7 +1447,6 @@ export default {
 					title: "Documents",
 				},
 			],
-			countries: [],
 			sectors: [
 				{
 					label: "Sector 1",
@@ -1689,8 +1471,31 @@ export default {
 					value: "female",
 				},
 			],
+			cittypelist: [
+				{
+					label: "Citizenship by family",
+					value: "family",
+				},
+				{
+					label: "Citizenship by birth",
+					value: "birth",
+				},
+				{
+					label: "Citizenship by marriage (jus matrimonii)",
+					value: "marriage",
+				},
+				{
+					label: "Naturalization",
+					value: "naturalization",
+				},
+				{
+					label: "Citizenship by investment or Economic Citizenship",
+					value: "economic",
+				},
+			],
 		};
 	},
+
 	components: {
 		vSelect,
 		VueFeather,
@@ -1700,7 +1505,16 @@ export default {
 		ACollapse: Collapse,
 		ACollapsePanel: Collapse.Panel,
 	},
-	created() {
+
+	beforeCreate() {
+		this.nationalities = nationalitiesjson
+			.map((el, i) => {
+				let label = el;
+				let value = i;
+				return { label, value };
+			})
+			.sort((a, b) => a.label.localeCompare(b.label));
+
 		this.countries = countriesjson
 			.map((el) => {
 				el.label = `${el.a3} +${el.pc}`;
@@ -1709,11 +1523,23 @@ export default {
 			})
 			.sort((a, b) => a.label.localeCompare(b.label));
 	},
+
 	methods: {
 		message: function () {
 			return message();
 		},
+
 		next() {
+			if (this.current == 1 && this.directorslist.length == 0) {
+				message.info({
+					content: "Please add a director first.",
+					style: {
+						marginRight: "20px",
+						textAlign: "right",
+					},
+				});
+				return;
+			}
 			// if (this.current == 0) {
 			// 	this.v$company.$validate();
 			// 	if (!this.v$company.$error) {
@@ -1726,8 +1552,38 @@ export default {
 			// }
 			this.current += 1;
 		},
+
 		prev() {
 			return (this.current -= 1);
+		},
+
+		addNewDirector() {
+			this.v$directors.$validate();
+			if (!this.v$directors.$error) {
+				this.directorslist.push(this.directorsstate);
+
+				this.modalVisible = false;
+
+				setTimeout(() => {
+					this.directorsstate.nipn = ""
+					this.directorsstate.fname = ""
+					this.directorsstate.lname = ""
+					this.directorsstate.oname = ""
+					this.directorsstate.gender = null
+					this.directorsstate.shares = ""
+					this.directorsstate.nationality = null
+					this.directorsstate.cittype = null
+					this.directorsstate.country = null
+					this.directorsstate.phone = ""
+					this.directorsstate.email = ""
+				}, 1000);
+				return;
+			}
+			message.info("Please fill in all required fields first.");
+			return;
+		},
+		removeDirector(id) {
+			this.directorslist.splice(id, 1);
 		},
 	},
 };
